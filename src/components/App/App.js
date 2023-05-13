@@ -1,6 +1,7 @@
 import {Routes, Route, Link, useNavigate} from 'react-router-dom';
 import './App.css';
 import MovieList from '../MovieList/MovieList'
+import Details from '../Details/Details';
 
 function App() {
   return (
@@ -9,7 +10,7 @@ function App() {
       <Routes>        
         <Route path="/" element={<MovieList /> } />
         
-        {/* Details page */}
+        <Route path='/details' element={<Details />} />
 
         {/* Add Movie page */}
       </Routes>
