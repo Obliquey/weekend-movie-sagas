@@ -1,6 +1,25 @@
 const express = require('express');
 const router = express.Router();
-const pool = require('../modules/pool')
+const pool = require('../modules/pool');
+const { legacy_createStore } = require('redux');
+
+// router to get the genre details of a specific movie
+router.get('/single/:id', (req, res) => {
+  const movieID = req.params.id;
+
+  let sqlText = `SELECT * FROM "movies_genres" WHERE movies_genres.movie_id = $1;`;
+  let sqlValues = [movieID]
+
+  pool.query(sqlText, sqlValues)
+    .then(dbRes => {
+      // dbRes.rows could be an array of multiple row objects, so I extract them with map to make an array of just the genre_id's. Now I'll send those back as the key for the genre reducers
+      const genres = dbRes.rows.map(obj => {return obj.genre_id})
+      console.log("Got our genres for the single movie:", genres);
+      res.send(genres)
+    }).catch(dbErr => {
+      console.log("Error connecting with DB:", dbErr);
+    })
+})
 
 
 router.get('/', (req, res) => {

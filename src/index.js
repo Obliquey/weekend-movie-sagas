@@ -37,10 +37,10 @@ function* fetchAllMovies() {
 function* getMovieDetails(action) {
     try{
         // use the movie ID we sent through the action to request genres of said movie
-        const movieGenres = yield axios.get(`api/movie/single/:${action.payload}`)
-        console.log("Got our single movie info:", movie.data)
+        const movieGenres = yield axios.get(`api/movie/single/${action.payload}`)
+        console.log("Got our single movie genre_id's:", movieGenres.data)
         // after receiving information regarding our clicked movie, I'll put all that info in a reducer to be called upon in Details
-        yield put({ type: 'MOVIE_GENRES', payload: movieGenres})
+        yield put({ type: 'MOVIE_GENRES', payload: movieGenres.data})
     } catch{
         console.log("Error connecting to server in getMovieDetails");
     }
@@ -79,6 +79,16 @@ const clickedMovie = (state=0, action) => {
             return state;
     }
 }
+// reducer to store the genre_id's of the clicked movie, to be compared with the genre's
+const singleMovieGenres = (state=[], action => {
+    switch (action.type) {
+        case 'MOVIE_GENRES':
+            // spread operator to add array of genres being added
+            return [...state, action.payload];
+        default:
+            return state;
+    }
+})
 
 // Used to store the movie genres
 const genres = (state = [], action) => {
@@ -95,7 +105,8 @@ const storeInstance = createStore(
     combineReducers({
         movies,
         genres,
-        clickedMovie
+        clickedMovie,
+        singleMovieGenres
     }),
     // Add sagaMiddleware to our store
     applyMiddleware(sagaMiddleware, logger),
