@@ -2,8 +2,6 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../modules/pool')
 
-// router to get a single movie's data
-// router.get('/single', (req, res))
 
 router.get('/', (req, res) => {
 
