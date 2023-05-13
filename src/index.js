@@ -16,6 +16,7 @@ import axios from 'axios';
 function* rootSaga() {
     yield takeEvery('SAGA/FETCH_MOVIES', fetchAllMovies);
     yield takeEvery('SAGA/FETCH_GENRES', fetchGenres)
+    // yield takeEvery('SAGA/MOVIE_DETAILS', getMovieDetails)
 }
 
 function* fetchAllMovies() {
@@ -31,6 +32,17 @@ function* fetchAllMovies() {
         
 }
 
+// gotta get the details of a single movie
+// function* getMovieDetails() {
+//     try{
+//         const movie = yield axios.get('api/movie/single')
+//         console.log("Got our single movie info:", movie.data)
+//     } catch{
+//         console.log("Error connecting to server in getMovieDetails");
+//     }
+// }
+
+// might not actually need this, since I will just be getting the ones relevant to the movie that was clicked?
 function* fetchGenres() {
     // gotta get all the categories + relationships to the movies from the DB
     try{
