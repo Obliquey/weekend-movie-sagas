@@ -8,7 +8,8 @@ function MovieList() {
     const movies = useSelector(store => store.movies);
 
     useEffect(() => {
-        dispatch({ type: 'FETCH_MOVIES' });
+        dispatch({ type: 'SAGA/FETCH_MOVIES' });
+        dispatch({type: 'SAGA/FETCH_GENRES'})
     }, []);
 
     return (
