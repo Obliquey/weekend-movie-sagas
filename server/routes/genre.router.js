@@ -3,6 +3,7 @@ const router = express.Router();
 const pool = require('../modules/pool')
 
 router.get('/', (req, res) => {
+  // gotta get the genres from the DB
   pool.query(`SELECT * FROM "genres"`)
     .then((dbRes) => {
       console.log('Got our genres:', dbRes.rows)

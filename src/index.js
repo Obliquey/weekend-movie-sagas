@@ -35,7 +35,7 @@ function* fetchGenres() {
     // gotta get all the categories + relationships to the movies from the DB
     try{
         const genres = yield axios.get('/api/genre');
-        console.log("Got our genres:", genres.data);
+        yield put({type: 'SET_GENRES', payload: genres.data})
     } catch {
         console.log("Couldn't get genres from database");
     }
