@@ -14,7 +14,9 @@ import axios from 'axios';
 
 // Create the rootSaga generator function
 function* rootSaga() {
-    yield takeEvery('FETCH_MOVIES', fetchAllMovies);
+    yield takeEvery('SAGA/FETCH_MOVIES', fetchAllMovies);
+    yield takeEvery('SAGA/FETCH_GENRES', fetchGenres)
+    // yield takeEvery('SAGA/MOVIE_DETAILS', getMovieDetails)
 }
 
 function* fetchAllMovies() {
@@ -30,6 +32,27 @@ function* fetchAllMovies() {
         
 }
 
+// gotta get the details of a single movie
+// function* getMovieDetails() {
+//     try{
+//         const movie = yield axios.get('api/movie/single')
+//         console.log("Got our single movie info:", movie.data)
+//     } catch{
+//         console.log("Error connecting to server in getMovieDetails");
+//     }
+// }
+
+// might not actually need this, since I will just be getting the ones relevant to the movie that was clicked?
+function* fetchGenres() {
+    // gotta get all the categories + relationships to the movies from the DB
+    try{
+        const genres = yield axios.get('/api/genre');
+        yield put({type: 'SET_GENRES', payload: genres.data})
+    } catch {
+        console.log("Couldn't get genres from database");
+    }
+}
+
 // Create sagaMiddleware
 const sagaMiddleware = createSagaMiddleware();
 
@@ -37,6 +60,16 @@ const sagaMiddleware = createSagaMiddleware();
 const movies = (state = [], action) => {
     switch (action.type) {
         case 'SET_MOVIES':
+            return action.payload;
+        default:
+            return state;
+    }
+}
+
+// reducer to store the ID of the movie the user clicked, to then be used to fetch all relevant data about that movie
+const clickedMovie = (state=0, action) => {
+    switch (action.type) {
+        case 'CLICKED_MOVIE':
             return action.payload;
         default:
             return state;
@@ -58,6 +91,7 @@ const storeInstance = createStore(
     combineReducers({
         movies,
         genres,
+        clickedMovie
     }),
     // Add sagaMiddleware to our store
     applyMiddleware(sagaMiddleware, logger),
