@@ -1,9 +1,31 @@
 const express = require('express');
 const router = express.Router();
-const pool = require('../modules/pool')
+const pool = require('../modules/pool');
+const { legacy_createStore } = require('redux');
 
-// router to get a single movie's data
-// router.get('/single', (req, res))
+// router to get the genre details of a specific movie
+router.get('/single/:id', (req, res) => {
+  const movieID = req.params.id;
+
+  // joining the other tables, needed to select genre that matched the movies_genres table
+  let sqlText = `SELECT genres.name, genres.id, movies_genres.movie_id FROM "genres"
+	JOIN movies_genres
+		ON genres.id = movies_genres.genre_id
+	JOIN movies
+		ON movies.id = movies_genres.movie_id
+	WHERE movies_genres.movie_id = $1;`;
+
+  let sqlValues = [movieID]
+
+  pool.query(sqlText, sqlValues)
+    .then(dbRes => {
+      console.log("Got our genres for the single movie:", dbRes.rows);
+      res.send(dbRes.rows)
+    }).catch(dbErr => {
+      console.log("Error connecting with DB:", dbErr);
+    })
+})
+
 
 router.get('/', (req, res) => {
 

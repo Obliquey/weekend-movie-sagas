@@ -16,7 +16,7 @@ import axios from 'axios';
 function* rootSaga() {
     yield takeEvery('SAGA/FETCH_MOVIES', fetchAllMovies);
     yield takeEvery('SAGA/FETCH_GENRES', fetchGenres)
-    // yield takeEvery('SAGA/MOVIE_DETAILS', getMovieDetails)
+    yield takeEvery('SAGA/GET_DETAILS', getMovieDetails)
 }
 
 function* fetchAllMovies() {
@@ -32,15 +32,18 @@ function* fetchAllMovies() {
         
 }
 
-// gotta get the details of a single movie
-// function* getMovieDetails() {
-//     try{
-//         const movie = yield axios.get('api/movie/single')
-//         console.log("Got our single movie info:", movie.data)
-//     } catch{
-//         console.log("Error connecting to server in getMovieDetails");
-//     }
-// }
+// gotta get the details/genres of a single movie
+function* getMovieDetails(action) {
+    try{
+        // use the movie ID we sent through the action to request genres of said movie
+        const movieGenres = yield axios.get(`api/movie/single/${action.payload}`)
+        console.log("Got our single movie genre_id's:", movieGenres.data)
+        // after receiving information regarding our clicked movie, I'll put all that info in a reducer to be called upon in Details
+        yield put({ type: 'MOVIE_GENRES', payload: movieGenres.data})
+    } catch{
+        console.log("Error connecting to server in getMovieDetails");
+    }
+}
 
 // might not actually need this, since I will just be getting the ones relevant to the movie that was clicked?
 function* fetchGenres() {
@@ -52,6 +55,7 @@ function* fetchGenres() {
         console.log("Couldn't get genres from database");
     }
 }
+
 
 // Create sagaMiddleware
 const sagaMiddleware = createSagaMiddleware();
@@ -75,6 +79,16 @@ const clickedMovie = (state=0, action) => {
             return state;
     }
 }
+// reducer to store the genre_id's of the clicked movie, to be compared with the genre's
+const singleMovieGenres = (state = [], action) => {
+    switch (action.type) {
+        case 'MOVIE_GENRES':
+            // spread operator to add array of genres being added
+            return action.payload;
+        default:
+            return state;
+    }
+}
 
 // Used to store the movie genres
 const genres = (state = [], action) => {
@@ -91,7 +105,8 @@ const storeInstance = createStore(
     combineReducers({
         movies,
         genres,
-        clickedMovie
+        clickedMovie,
+        singleMovieGenres
     }),
     // Add sagaMiddleware to our store
     applyMiddleware(sagaMiddleware, logger),
