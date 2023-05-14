@@ -2,6 +2,13 @@ import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
 
+// MUI components
+import { Button } from "@mui/material";
+import Card from "@mui/material";
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Typography from '@mui/material/Typography';
+
 function Details() {
     // gotta access a lot of reducers for the details page, could probably build this cleaner
     const movieID = useSelector(store => store.clickedMovie);
@@ -23,9 +30,11 @@ function Details() {
 
     return (
 
-        <>
-            {/* will want to make this prettier, if I have time */}
-            <h2>{movieToShow.title}</h2>
+        <main className="">
+
+
+
+            {/* <h2>{movieToShow.title}</h2>
             <h3>Genres!</h3>
             <>
                 {
@@ -35,9 +44,9 @@ function Details() {
                 }
             </>
             <img src={movieToShow.poster} alt={movieToShow.description} />
-            <p>{movieToShow.description}</p>
+            <p>{movieToShow.description}</p> */}
             <button onClick={() => navigate('/')}>Go Back</button>
-        </>
+        </main>
     )
 }
 export default Details;
