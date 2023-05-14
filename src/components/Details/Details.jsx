@@ -31,7 +31,7 @@ function Details() {
     return (
 
         <main className="h-screen">
-            <div className='grid grid-cols-5 mt-6 ml-4'>
+            <div className='grid grid-cols-5 mt-6 ml-14'>
                 <span className="h-7 w-auto">
                     <Card>
                         <CardMedia
@@ -50,7 +50,10 @@ function Details() {
                         </CardContent>
                     </Card>
                 </span>
-                <p className="ml-10 col-span-3">{movieToShow.description}</p>
+                <p className="ml-10 mt-10 col-span-3">{movieToShow.description}</p>
+            </div>
+            <div className="mt-6 ml-24">
+                <Button variant="outlined" size="large" onClick={() => navigate('/')}>Go Back</Button>
             </div>
         </main>
     )
