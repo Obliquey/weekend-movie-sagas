@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom"
 
 // MUI components
 import { Button } from "@mui/material";
-import Card from "@mui/material";
+import Card from "@mui/material/Card";
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
@@ -30,22 +30,28 @@ function Details() {
 
     return (
 
-        <main className="">
-
-
-
-            {/* <h2>{movieToShow.title}</h2>
-            <h3>Genres!</h3>
-            <>
-                {
-                    singleMovieGenres.map(obj => { 
-                        return <h3>{obj.name}</h3>
-                    })
-                }
-            </>
-            <img src={movieToShow.poster} alt={movieToShow.description} />
-            <p>{movieToShow.description}</p> */}
-            <button onClick={() => navigate('/')}>Go Back</button>
+        <main className="h-screen">
+            <div className='grid grid-cols-5 mt-6 ml-4'>
+                <span className="h-7 w-auto">
+                    <Card>
+                        <CardMedia
+                            component="img"
+                            image={movieToShow.poster} />
+                        <CardContent>
+                            <Typography variant="h4">
+                                {movieToShow.title}
+                            </Typography>
+                            <Typography gutterBottom variant="p" component="div">
+                                {
+                                    singleMovieGenres.map(obj => { 
+                                        return <h3>{obj.name}</h3>
+                                })}
+                            </Typography>
+                        </CardContent>
+                    </Card>
+                </span>
+                <p className="ml-10 col-span-3">{movieToShow.description}</p>
+            </div>
         </main>
     )
 }
