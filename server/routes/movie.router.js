@@ -7,15 +7,20 @@ const { legacy_createStore } = require('redux');
 router.get('/single/:id', (req, res) => {
   const movieID = req.params.id;
 
-  let sqlText = `SELECT * FROM "movies_genres" WHERE movies_genres.movie_id = $1;`;
+  // joining the other tables, needed to select genre that matched the movies_genres table
+  let sqlText = `SELECT genres.name, genres.id, movies_genres.movie_id FROM "genres"
+	JOIN movies_genres
+		ON genres.id = movies_genres.genre_id
+	JOIN movies
+		ON movies.id = movies_genres.movie_id
+	WHERE movies_genres.movie_id = $1;`;
+
   let sqlValues = [movieID]
 
   pool.query(sqlText, sqlValues)
     .then(dbRes => {
-      // dbRes.rows could be an array of multiple row objects, so I extract them with map to make an array of just the genre_id's. Now I'll send those back as the key for the genre reducers
-      const genres = dbRes.rows.map(obj => {return obj.genre_id})
-      console.log("Got our genres for the single movie:", genres);
-      res.send(genres)
+      console.log("Got our genres for the single movie:", dbRes.rows);
+      res.send(dbRes.rows)
     }).catch(dbErr => {
       console.log("Error connecting with DB:", dbErr);
     })

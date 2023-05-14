@@ -17,7 +17,6 @@ function* rootSaga() {
     yield takeEvery('SAGA/FETCH_MOVIES', fetchAllMovies);
     yield takeEvery('SAGA/FETCH_GENRES', fetchGenres)
     yield takeEvery('SAGA/GET_DETAILS', getMovieDetails)
-    // yield takeEvery('SAGA/MOVIE_DETAILS', getMovieDetails)
 }
 
 function* fetchAllMovies() {
@@ -57,6 +56,7 @@ function* fetchGenres() {
     }
 }
 
+
 // Create sagaMiddleware
 const sagaMiddleware = createSagaMiddleware();
 
@@ -80,15 +80,15 @@ const clickedMovie = (state=0, action) => {
     }
 }
 // reducer to store the genre_id's of the clicked movie, to be compared with the genre's
-const singleMovieGenres = (state=[], action => {
+const singleMovieGenres = (state = [], action) => {
     switch (action.type) {
         case 'MOVIE_GENRES':
             // spread operator to add array of genres being added
-            return [...state, action.payload];
+            return action.payload;
         default:
             return state;
     }
-})
+}
 
 // Used to store the movie genres
 const genres = (state = [], action) => {
